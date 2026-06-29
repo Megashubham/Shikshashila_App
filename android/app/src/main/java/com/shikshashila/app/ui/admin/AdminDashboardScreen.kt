@@ -1,5 +1,8 @@
 package com.shikshashila.app.ui.admin
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -26,30 +29,24 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.shikshashila.app.data.model.AdminDashboardData
 import com.shikshashila.app.ui.theme.ManropeFontFamily
 
-// --- Custom Colors based on the mockup ---
-private val BlueHeaderStart = Color(0xFF2563EB)
-private val BlueHeaderEnd = Color(0xFF3B82F6)
-private val BgColor = Color(0xFFF8F9FA)
-private val TextDark = Color(0xFF0F172A)
-private val TextMuted = Color(0xFF6B7280)
+// ── Colors ──────────────────────────────────────────────────────────────────
+private val BlueStart  = Color(0xFF2563EB)
+private val BlueEnd    = Color(0xFF3B82F6)
+private val BgColor    = Color(0xFFF8F9FA)
+private val TextDark   = Color(0xFF111827)
+private val TextMuted  = Color(0xFF6B7280)
 
-// Soft Icon Backgrounds
-private val SoftPurple = Color(0xFFEDE9FE)
-private val SoftPink = Color(0xFFFCE7F3)
-private val SoftGreen = Color(0xFFD1FAE5)
-private val SoftYellow = Color(0xFFFEF3C7)
-private val SoftBlue = Color(0xFFDBEAFE)
-private val SoftRed = Color(0xFFFEE2E2)
-private val SoftTeal = Color(0xFFCCFBF1)
+private val SoftPurple = Color(0xFFEDE9FE); private val TintPurple = Color(0xFF7C3AED)
+private val SoftPink   = Color(0xFFFCE7F3); private val TintPink   = Color(0xFFDB2777)
+private val SoftGreen  = Color(0xFFD1FAE5); private val TintGreen  = Color(0xFF059669)
+private val SoftYellow = Color(0xFFFEF3C7); private val TintYellow = Color(0xFFD97706)
+private val SoftBlue   = Color(0xFFDBEAFE); private val TintBlue   = Color(0xFF2563EB)
+private val SoftRed    = Color(0xFFFEE2E2); private val TintRed    = Color(0xFFDC2626)
+private val SoftTeal   = Color(0xFFCCFBF1); private val TintTeal   = Color(0xFF0D9488)
+private val SoftOrange = Color(0xFFFFEDD5); private val TintOrange = Color(0xFFEA580C)
 
-// Icon Tints
-private val TintPurple = Color(0xFF7C3AED)
-private val TintPink = Color(0xFFDB2777)
-private val TintGreen = Color(0xFF059669)
-private val TintYellow = Color(0xFFD97706)
-private val TintBlue = Color(0xFF2563EB)
-private val TintRed = Color(0xFFDC2626)
-private val TintTeal = Color(0xFF0D9488)
+// ── Data class for a module icon entry ──────────────────────────────────────
+private data class ModuleEntry(val title: String, val icon: ImageVector, val bg: Color, val tint: Color)
 
 @Composable
 fun AdminDashboardScreen(
@@ -59,53 +56,24 @@ fun AdminDashboardScreen(
 ) {
     val uiState by viewModel.dashboardState.collectAsState()
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(BgColor)
-    ) {
+    Box(modifier = Modifier.fillMaxSize().background(BgColor)) {
         when (uiState) {
             is AdminState.Loading -> {
-                Column(
-                    modifier = Modifier.align(Alignment.Center),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    CircularProgressIndicator(color = BlueHeaderStart)
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(
-                        "Loading dashboard...",
-                        color = TextMuted,
-                        fontFamily = ManropeFontFamily,
-                        fontSize = 14.sp
-                    )
+                Column(modifier = Modifier.align(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally) {
+                    CircularProgressIndicator(color = BlueStart)
+                    Spacer(Modifier.height(12.dp))
+                    Text("Loading dashboard...", color = TextMuted, fontFamily = ManropeFontFamily, fontSize = 14.sp)
                 }
             }
             is AdminState.Error -> {
-                val error = (uiState as AdminState.Error).message
-                Column(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Surface(
-                        shape = RoundedCornerShape(12.dp),
-                        color = Color(0xFFFEE2E2)
-                    ) {
-                        Text(
-                            text = error,
-                            color = Color(0xFFDC2626),
-                            fontSize = 14.sp,
-                            fontFamily = ManropeFontFamily,
-                            modifier = Modifier.padding(16.dp)
-                        )
+                val msg = (uiState as AdminState.Error).message
+                Column(modifier = Modifier.align(Alignment.Center).padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Surface(shape = RoundedCornerShape(12.dp), color = SoftRed) {
+                        Text(msg, color = TintRed, fontSize = 14.sp, fontFamily = ManropeFontFamily, modifier = Modifier.padding(16.dp))
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Button(
-                        onClick = { viewModel.fetchDashboard() },
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = TextDark)
-                    ) {
+                    Spacer(Modifier.height(16.dp))
+                    Button(onClick = { viewModel.fetchDashboard() }, shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = BlueStart)) {
                         Text("Retry", fontFamily = ManropeFontFamily, fontWeight = FontWeight.SemiBold)
                     }
                 }
@@ -120,388 +88,259 @@ fun AdminDashboardScreen(
 }
 
 @Composable
-fun AdminDashboardContent(
-    data: AdminDashboardData,
-    onNavigateTo: (String) -> Unit,
-    onLogout: () -> Unit
-) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(bottom = 32.dp)
-    ) {
-        // --- Header Section ---
+fun AdminDashboardContent(data: AdminDashboardData, onNavigateTo: (String) -> Unit, onLogout: () -> Unit) {
+    var selectedTab by remember { mutableStateOf(0) } // 0=Dashboard, 1=Updates
+    var showMoreModules by remember { mutableStateOf(false) }
+
+    val primaryModules = listOf(
+        ModuleEntry("Students",   Icons.Filled.Group,                SoftPurple, TintPurple),
+        ModuleEntry("Staff Mgmt", Icons.Filled.BadgeOutlined,        SoftPink,   TintPink),
+        ModuleEntry("Attendance", Icons.Filled.EventAvailable,       SoftGreen,  TintGreen),
+        ModuleEntry("Fees / Dues",Icons.Filled.AccountBalanceWallet, SoftYellow, TintYellow),
+        ModuleEntry("Classes",    Icons.Filled.GridView,             SoftBlue,   TintBlue),
+        ModuleEntry("Timetable",  Icons.Filled.CalendarMonth,        SoftTeal,   TintTeal),
+        ModuleEntry("Exams",      Icons.Filled.MenuBook,             SoftRed,    TintRed),
+        ModuleEntry("Reports",    Icons.Filled.Assessment,           SoftBlue,   TintBlue)
+    )
+
+    val commsModules = listOf(
+        ModuleEntry("Circulars",  Icons.Filled.Notifications,        SoftYellow, TintYellow),
+        ModuleEntry("Events",     Icons.Filled.Event,                SoftOrange, TintOrange),
+        ModuleEntry("SMS / Alert",Icons.Filled.Sms,                  SoftPink,   TintPink),
+        ModuleEntry("Settings",   Icons.Filled.Settings,             SoftBlue,   TintBlue)
+    )
+
+    val moreModules = listOf(
+        ModuleEntry("Expenses",   Icons.Filled.AccountBalance,       SoftGreen,  TintGreen),
+        ModuleEntry("Library",    Icons.Filled.LibraryBooks,         SoftPurple, TintPurple),
+        ModuleEntry("Transport",  Icons.Filled.DirectionsBus,        SoftTeal,   TintTeal),
+        ModuleEntry("Leads",      Icons.Filled.PersonAdd,            SoftBlue,   TintBlue),
+        ModuleEntry("ID Card",    Icons.Filled.CreditCard,           SoftPink,   TintPink),
+        ModuleEntry("Leave App",  Icons.Filled.EventBusy,            SoftRed,    TintRed),
+        ModuleEntry("Homework",   Icons.Filled.Book,                 SoftOrange, TintOrange),
+        ModuleEntry("eLibrary",   Icons.Filled.MenuBook,             SoftYellow, TintYellow),
+        ModuleEntry("Syllabus",   Icons.Filled.ListAlt,              SoftGreen,  TintGreen)
+    )
+
+    LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 40.dp)) {
+
+        // ── Header + Stats Strip ─────────────────────────────────────────────
         item {
-            Box(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                // Blue Gradient Header
-                Column(
+            Box(modifier = Modifier.fillMaxWidth()) {
+                // Blue gradient header
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
-                        .background(Brush.linearGradient(listOf(BlueHeaderStart, BlueHeaderEnd)))
-                        .padding(top = 48.dp, bottom = 70.dp, start = 24.dp, end = 24.dp)
+                        .background(Brush.horizontalGradient(listOf(BlueStart, BlueEnd)))
+                        .padding(top = 52.dp, bottom = 72.dp, start = 24.dp, end = 24.dp)
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            // Avatar Box
+                            // School initials avatar
                             Box(
-                                modifier = Modifier
-                                    .size(56.dp)
-                                    .clip(RoundedCornerShape(16.dp))
-                                    .background(Color.White),
+                                Modifier.size(52.dp).clip(RoundedCornerShape(14.dp)).background(Color.White),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text(
-                                    text = "DS",
-                                    color = BlueHeaderStart,
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    fontFamily = ManropeFontFamily
-                                )
+                                Text("DS", color = BlueStart, fontSize = 20.sp, fontWeight = FontWeight.ExtraBold, fontFamily = ManropeFontFamily)
                             }
-                            Spacer(modifier = Modifier.width(16.dp))
+                            Spacer(Modifier.width(14.dp))
                             Column {
-                                Text(
-                                    text = "Welcome back,",
-                                    color = Color.White.copy(alpha = 0.9f),
-                                    fontSize = 13.sp,
-                                    fontFamily = ManropeFontFamily
-                                )
+                                Text("Welcome back,", color = Color.White.copy(alpha = 0.85f), fontSize = 13.sp, fontFamily = ManropeFontFamily)
                                 Text(
                                     text = data.adminInfo.schoolName.ifEmpty { "DPS International School" },
-                                    color = Color.White,
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    fontFamily = ManropeFontFamily
+                                    color = Color.White, fontSize = 17.sp, fontWeight = FontWeight.Bold, fontFamily = ManropeFontFamily
                                 )
-                                Text(
-                                    text = "School Admin Portal",
-                                    color = Color.White.copy(alpha = 0.8f),
-                                    fontSize = 12.sp,
-                                    fontFamily = ManropeFontFamily
-                                )
+                                Text("School Admin Portal", color = Color.White.copy(alpha = 0.75f), fontSize = 12.sp, fontFamily = ManropeFontFamily)
                             }
                         }
-                        // Logout / Notification Icon
-                        IconButton(
-                            onClick = onLogout,
-                            modifier = Modifier
-                                .size(44.dp)
-                                .clip(CircleShape)
-                                .background(Color.White.copy(alpha = 0.2f))
+                        // Bell icon
+                        Box(
+                            Modifier.size(40.dp).clip(CircleShape).background(Color.White.copy(alpha = 0.2f)).clickable { },
+                            contentAlignment = Alignment.Center
                         ) {
-                            Icon(
-                                Icons.Outlined.Notifications,
-                                contentDescription = "Notifications",
-                                tint = Color.White
-                            )
+                            Icon(Icons.Outlined.NotificationsNone, contentDescription = "Notifications", tint = Color.White, modifier = Modifier.size(22.dp))
                         }
                     }
                 }
 
-                // Stats Strip Overlapping the header
+                // Floating stats card
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 24.dp)
+                        .padding(horizontal = 20.dp)
                         .align(Alignment.BottomCenter)
-                        .offset(y = 40.dp)
-                        .shadow(8.dp, RoundedCornerShape(20.dp), spotColor = Color(0x1A000000)),
+                        .offset(y = 44.dp)
+                        .shadow(10.dp, RoundedCornerShape(20.dp)),
                     shape = RoundedCornerShape(20.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.White)
                 ) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 20.dp),
+                        Modifier.fillMaxWidth().padding(vertical = 18.dp),
                         horizontalArrangement = Arrangement.SpaceEvenly,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        StatItem(data.stats.totalStudents.toString(), "STUDENTS", TintBlue)
-                        Divider(
-                            modifier = Modifier
-                                .height(40.dp)
-                                .width(1.dp),
-                            color = Color(0xFFF3F4F6)
-                        )
-                        StatItem(data.stats.totalStaff.toString(), "STAFF", TintBlue)
-                        Divider(
-                            modifier = Modifier
-                                .height(40.dp)
-                                .width(1.dp),
-                            color = Color(0xFFF3F4F6)
-                        )
-                        // Note: Format the currency correctly later if needed
-                        StatItem("₹56,000", "REVENUE", TintGreen)
+                        AdminStatItem(data.stats.totalStudents.toString(), "STUDENTS", TintBlue)
+                        Box(Modifier.width(1.dp).height(36.dp).background(Color(0xFFE5E7EB)))
+                        AdminStatItem(data.stats.totalStaff.toString(), "STAFF", TintBlue)
+                        Box(Modifier.width(1.dp).height(36.dp).background(Color(0xFFE5E7EB)))
+                        AdminStatItem("₹56,000", "REVENUE", TintGreen)
                     }
                 }
             }
-            
-            Spacer(modifier = Modifier.height(60.dp))
+            Spacer(Modifier.height(60.dp))
         }
 
-        // --- Tabs ---
+        // ── Tab Bar ──────────────────────────────────────────────────────────
         item {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Color.White)
+                Modifier.fillMaxWidth().padding(horizontal = 20.dp)
+                    .clip(RoundedCornerShape(14.dp)).background(Color.White)
             ) {
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(4.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(Color.White)
-                        .clickable { },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = "Dashboard",
-                            color = TintBlue,
-                            fontFamily = ManropeFontFamily,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp,
-                            modifier = Modifier.padding(vertical = 12.dp)
-                        )
-                        Box(
-                            modifier = Modifier
-                                .width(60.dp)
-                                .height(3.dp)
-                                .clip(RoundedCornerShape(topStart = 3.dp, topEnd = 3.dp))
-                                .background(TintBlue)
-                        )
-                    }
-                }
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(4.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .clickable { },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "Updates",
-                        color = TextMuted,
-                        fontFamily = ManropeFontFamily,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 14.sp,
-                        modifier = Modifier.padding(vertical = 12.dp)
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(24.dp))
-        }
-
-        // --- Academics & Operations ---
-        item {
-            Text(
-                text = "Academics & Operations",
-                fontFamily = ManropeFontFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                color = TextDark,
-                modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)
-            )
-            
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                // Row 1
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    DashboardModuleIcon(
-                        title = "Students", icon = Icons.Filled.Group,
-                        bg = SoftPurple, tint = TintPurple
-                    )
-                    DashboardModuleIcon(
-                        title = "Staff Mgmt", icon = Icons.Filled.Badge,
-                        bg = SoftPink, tint = TintPink
-                    )
-                    DashboardModuleIcon(
-                        title = "Attendance", icon = Icons.Filled.EventAvailable,
-                        bg = SoftGreen, tint = TintGreen
-                    )
-                    DashboardModuleIcon(
-                        title = "Fees / Dues", icon = Icons.Filled.AccountBalanceWallet,
-                        bg = SoftYellow, tint = TintYellow
-                    )
-                }
-                // Row 2
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    DashboardModuleIcon(
-                        title = "Classes", icon = Icons.Filled.GridView,
-                        bg = SoftBlue, tint = TintBlue
-                    )
-                    DashboardModuleIcon(
-                        title = "Timetable", icon = Icons.Filled.CalendarMonth,
-                        bg = SoftTeal, tint = TintTeal
-                    )
-                    DashboardModuleIcon(
-                        title = "Exams", icon = Icons.Filled.MenuBook,
-                        bg = SoftPurple, tint = TintPurple
-                    )
-                    DashboardModuleIcon(
-                        title = "Reports", icon = Icons.Filled.Assessment,
-                        bg = SoftBlue, tint = TintBlue
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(24.dp))
-        }
-
-        // --- Communication & Tools ---
-        item {
-            Text(
-                text = "Communication & Tools",
-                fontFamily = ManropeFontFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                color = TextDark,
-                modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp)
-            )
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                // Row 1
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    DashboardModuleIcon(
-                        title = "Circulars", icon = Icons.Filled.Notifications,
-                        bg = SoftYellow, tint = TintYellow
-                    )
-                    DashboardModuleIcon(
-                        title = "Events", icon = Icons.Filled.Event,
-                        bg = SoftPink, tint = TintPink
-                    )
-                    DashboardModuleIcon(
-                        title = "SMS / Alert", icon = Icons.Filled.Sms,
-                        bg = SoftGreen, tint = TintGreen
-                    )
-                    DashboardModuleIcon(
-                        title = "Settings", icon = Icons.Filled.Settings,
-                        bg = SoftBlue, tint = TintBlue
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(32.dp))
-        }
-
-        // --- View More Button ---
-        item {
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                Surface(
-                    shape = RoundedCornerShape(24.dp),
-                    color = SoftBlue,
-                    onClick = { /* View More */ }
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                listOf("Dashboard", "Updates").forEachIndexed { i, label ->
+                    Box(
+                        Modifier.weight(1f).clickable { selectedTab = i },
+                        contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = "View More",
-                            color = TintBlue,
-                            fontFamily = ManropeFontFamily,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 13.sp
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Icon(
-                            Icons.Default.KeyboardArrowDown,
-                            contentDescription = null,
-                            tint = TintBlue,
-                            modifier = Modifier.size(16.dp)
-                        )
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                label,
+                                color = if (selectedTab == i) BlueStart else TextMuted,
+                                fontFamily = ManropeFontFamily,
+                                fontWeight = if (selectedTab == i) FontWeight.Bold else FontWeight.Medium,
+                                fontSize = 14.sp,
+                                modifier = Modifier.padding(vertical = 14.dp)
+                            )
+                            if (selectedTab == i) {
+                                Box(Modifier.fillMaxWidth().height(3.dp).background(BlueStart))
+                            }
+                        }
                     }
+                }
+            }
+            Spacer(Modifier.height(20.dp))
+        }
+
+        if (selectedTab == 0) {
+            // ── Academics & Operations ───────────────────────────────────────
+            item {
+                Text("Academics & Operations", fontFamily = ManropeFontFamily, fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp, color = TextDark, modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp))
+                ModuleGrid(primaryModules)
+                Spacer(Modifier.height(20.dp))
+            }
+
+            // ── Communication & Tools ────────────────────────────────────────
+            item {
+                Text("Communication & Tools", fontFamily = ManropeFontFamily, fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp, color = TextDark, modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp))
+                ModuleGrid(commsModules)
+                Spacer(Modifier.height(20.dp))
+            }
+
+            // ── View More / Less toggle ──────────────────────────────────────
+            item {
+                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    Surface(
+                        shape = RoundedCornerShape(24.dp),
+                        color = SoftBlue,
+                        onClick = { showMoreModules = !showMoreModules }
+                    ) {
+                        Row(Modifier.padding(horizontal = 22.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                if (showMoreModules) "View Less" else "View More",
+                                color = BlueStart, fontFamily = ManropeFontFamily, fontWeight = FontWeight.Bold, fontSize = 13.sp
+                            )
+                            Spacer(Modifier.width(4.dp))
+                            Icon(
+                                if (showMoreModules) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                                contentDescription = null, tint = BlueStart, modifier = Modifier.size(16.dp)
+                            )
+                        }
+                    }
+                }
+                Spacer(Modifier.height(16.dp))
+            }
+
+            // ── More Modules (expandable) ────────────────────────────────────
+            item {
+                AnimatedVisibility(visible = showMoreModules, enter = expandVertically(), exit = shrinkVertically()) {
+                    Column {
+                        Text("More Modules", fontFamily = ManropeFontFamily, fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp, color = TextDark, modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp))
+                        ModuleGrid(moreModules)
+                        Spacer(Modifier.height(24.dp))
+                    }
+                }
+            }
+
+        } else {
+            // ── Updates Tab ──────────────────────────────────────────────────
+            item {
+                Column(
+                    Modifier.fillMaxWidth().padding(top = 60.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        Icons.Outlined.Inbox,
+                        contentDescription = null,
+                        tint = Color(0xFFD1D5DB),
+                        modifier = Modifier.size(72.dp)
+                    )
+                    Spacer(Modifier.height(16.dp))
+                    Text("No new alerts", fontFamily = ManropeFontFamily, fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp, color = TextDark)
+                    Spacer(Modifier.height(8.dp))
+                    Text("School operations are running smoothly.", fontFamily = ManropeFontFamily,
+                        fontSize = 13.sp, color = TextMuted, textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(horizontal = 40.dp))
                 }
             }
         }
     }
 }
 
+// ── Reusable grid layout: 4 columns ────────────────────────────────────────
 @Composable
-fun StatItem(value: String, label: String, valueColor: Color) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-            text = value,
-            fontFamily = ManropeFontFamily,
-            fontWeight = FontWeight.ExtraBold,
-            fontSize = 24.sp,
-            color = valueColor
-        )
-        Spacer(modifier = Modifier.height(2.dp))
-        Text(
-            text = label,
-            fontFamily = ManropeFontFamily,
-            fontWeight = FontWeight.Bold,
-            fontSize = 10.sp,
-            color = TextMuted,
-            letterSpacing = 0.5.sp
-        )
+fun ModuleGrid(modules: List<ModuleEntry>) {
+    val rows = modules.chunked(4)
+    Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+        rows.forEach { row ->
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                row.forEach { module ->
+                    AdminModuleIcon(title = module.title, icon = module.icon, bg = module.bg, tint = module.tint)
+                }
+                // Pad empty cells if row has fewer than 4
+                repeat(4 - row.size) { Box(Modifier.width(72.dp)) }
+            }
+        }
     }
 }
 
 @Composable
-fun DashboardModuleIcon(
-    title: String,
-    icon: ImageVector,
-    bg: Color,
-    tint: Color,
-    onClick: () -> Unit = {}
-) {
+fun AdminStatItem(value: String, label: String, valueColor: Color) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(value, fontFamily = ManropeFontFamily, fontWeight = FontWeight.ExtraBold, fontSize = 22.sp, color = valueColor)
+        Spacer(Modifier.height(2.dp))
+        Text(label, fontFamily = ManropeFontFamily, fontWeight = FontWeight.Bold, fontSize = 10.sp, color = TextMuted, letterSpacing = 0.5.sp)
+    }
+}
+
+@Composable
+fun AdminModuleIcon(title: String, icon: ImageVector, bg: Color, tint: Color, onClick: () -> Unit = {}) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .width(76.dp)
-            .clickable(onClick = onClick)
+        modifier = Modifier.width(72.dp).clickable(onClick = onClick)
     ) {
         Box(
-            modifier = Modifier
-                .size(64.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(bg),
+            Modifier.size(62.dp).clip(RoundedCornerShape(16.dp)).background(bg),
             contentAlignment = Alignment.Center
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = title,
-                tint = tint,
-                modifier = Modifier.size(28.dp)
-            )
+            Icon(icon, contentDescription = title, tint = tint, modifier = Modifier.size(28.dp))
         }
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = title,
-            fontFamily = ManropeFontFamily,
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 11.sp,
-            color = TextDark,
-            textAlign = TextAlign.Center,
-            lineHeight = 14.sp
-        )
+        Spacer(Modifier.height(6.dp))
+        Text(title, fontFamily = ManropeFontFamily, fontWeight = FontWeight.SemiBold,
+            fontSize = 11.sp, color = TextDark, textAlign = TextAlign.Center, lineHeight = 14.sp,
+            modifier = Modifier.fillMaxWidth())
     }
 }
