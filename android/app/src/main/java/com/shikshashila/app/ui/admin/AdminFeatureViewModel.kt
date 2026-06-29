@@ -56,7 +56,7 @@ class AdminFeatureViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val resp = api.getAdminStudents(search.ifEmpty { null }, classId)
-                if (resp.isSuccessful && resp.body()?.success == true) {
+                if (resp.isSuccessful && resp.body()?.isSuccess == true) {
                     _studentsState.value = AdminFeatureState.Success(resp.body()!!.data!!)
                 } else {
                     _studentsState.value = AdminFeatureState.Error(
@@ -74,7 +74,7 @@ class AdminFeatureViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val resp = api.getAdminStaff(type)
-                if (resp.isSuccessful && resp.body()?.success == true) {
+                if (resp.isSuccessful && resp.body()?.isSuccess == true) {
                     _staffState.value = AdminFeatureState.Success(resp.body()!!.data!!)
                 } else {
                     _staffState.value = AdminFeatureState.Error(
@@ -92,7 +92,7 @@ class AdminFeatureViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val resp = api.getAdminAttendance(date)
-                if (resp.isSuccessful && resp.body()?.success == true) {
+                if (resp.isSuccessful && resp.body()?.isSuccess == true) {
                     _attendanceState.value = AdminFeatureState.Success(resp.body()!!.data!!)
                 } else {
                     _attendanceState.value = AdminFeatureState.Error(
@@ -110,7 +110,7 @@ class AdminFeatureViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val resp = api.getAdminClasses()
-                if (resp.isSuccessful && resp.body()?.success == true) {
+                if (resp.isSuccessful && resp.body()?.isSuccess == true) {
                     _classesState.value = AdminFeatureState.Success(resp.body()!!.data!!)
                 } else {
                     _classesState.value = AdminFeatureState.Error(

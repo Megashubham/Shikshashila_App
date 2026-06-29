@@ -3,6 +3,7 @@ package com.shikshashila.app;
 import com.shikshashila.app.di.DatabaseModule;
 import com.shikshashila.app.di.NetworkModule;
 import com.shikshashila.app.di.RepositoryModule;
+import com.shikshashila.app.ui.admin.AdminFeatureViewModel_HiltModules;
 import com.shikshashila.app.ui.admin.AdminViewModel_HiltModules;
 import com.shikshashila.app.ui.auth.LoginViewModel_HiltModules;
 import com.shikshashila.app.ui.auth.MainViewModel_HiltModules;
@@ -162,6 +163,7 @@ public final class ShikshashilaApp_HiltComponents {
 
   @Subcomponent(
       modules = {
+          AdminFeatureViewModel_HiltModules.KeyModule.class,
           AdminViewModel_HiltModules.KeyModule.class,
           HiltWrapper_ActivityRetainedComponentManager_LifecycleModule.class,
           LoginViewModel_HiltModules.KeyModule.class,
@@ -207,6 +209,7 @@ public final class ShikshashilaApp_HiltComponents {
 
   @Subcomponent(
       modules = {
+          AdminFeatureViewModel_HiltModules.BindsModule.class,
           AdminViewModel_HiltModules.BindsModule.class,
           HiltWrapper_HiltViewModelFactory_ViewModelModule.class,
           LoginViewModel_HiltModules.BindsModule.class,

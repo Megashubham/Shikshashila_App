@@ -46,7 +46,7 @@ private val SoftTeal   = Color(0xFFCCFBF1); private val TintTeal   = Color(0xFF0
 private val SoftOrange = Color(0xFFFFEDD5); private val TintOrange = Color(0xFFEA580C)
 
 // ── Data class for a module icon entry ──────────────────────────────────────
-private data class ModuleEntry(val title: String, val icon: ImageVector, val bg: Color, val tint: Color, val route: String = "")
+data class ModuleEntry(val title: String, val icon: ImageVector, val bg: Color, val tint: Color, val route: String = "")
 
 @Composable
 fun AdminDashboardScreen(
@@ -94,7 +94,7 @@ fun AdminDashboardContent(data: AdminDashboardData, onNavigateTo: (String) -> Un
 
     val primaryModules = listOf(
         ModuleEntry("Students",   Icons.Filled.Group,                SoftPurple, TintPurple, "admin_students"),
-        ModuleEntry("Staff Mgmt", Icons.Filled.BadgeOutlined,        SoftPink,   TintPink,   "admin_staff"),
+        ModuleEntry("Staff Mgmt", Icons.Filled.Badge,                SoftPink,   TintPink,   "admin_staff"),
         ModuleEntry("Attendance", Icons.Filled.EventAvailable,       SoftGreen,  TintGreen,  "admin_attendance"),
         ModuleEntry("Fees / Dues",Icons.Filled.AccountBalanceWallet, SoftYellow, TintYellow, "admin_fees_report"),
         ModuleEntry("Classes",    Icons.Filled.GridView,             SoftBlue,   TintBlue,   "admin_classes"),
@@ -268,7 +268,7 @@ fun AdminDashboardContent(data: AdminDashboardData, onNavigateTo: (String) -> Un
                     Column {
                         Text("More Modules", fontFamily = ManropeFontFamily, fontWeight = FontWeight.Bold,
                             fontSize = 16.sp, color = TextDark, modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp))
-                        ModuleGrid(moreModules)
+                        ModuleGrid(moreModules, onNavigateTo)
                         Spacer(Modifier.height(24.dp))
                     }
                 }

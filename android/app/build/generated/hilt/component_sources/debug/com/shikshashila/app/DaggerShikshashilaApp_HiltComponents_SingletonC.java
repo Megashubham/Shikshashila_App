@@ -27,6 +27,8 @@ import com.shikshashila.app.di.NetworkModule_ProvideGsonFactory;
 import com.shikshashila.app.di.NetworkModule_ProvideOkHttpClientFactory;
 import com.shikshashila.app.di.NetworkModule_ProvideRetrofitFactory;
 import com.shikshashila.app.di.NetworkModule_ProvideShikshashilaApiFactory;
+import com.shikshashila.app.ui.admin.AdminFeatureViewModel;
+import com.shikshashila.app.ui.admin.AdminFeatureViewModel_HiltModules_KeyModule_ProvideFactory;
 import com.shikshashila.app.ui.admin.AdminViewModel;
 import com.shikshashila.app.ui.admin.AdminViewModel_HiltModules_KeyModule_ProvideFactory;
 import com.shikshashila.app.ui.auth.LoginViewModel;
@@ -418,7 +420,7 @@ public final class DaggerShikshashilaApp_HiltComponents_SingletonC {
 
     @Override
     public Set<String> getViewModelKeys() {
-      return SetBuilder.<String>newSetBuilder(7).add(AdminViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(LoginViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(MainViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(StudentFeatureViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(StudentViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(TeacherFeatureViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(TeacherViewModel_HiltModules_KeyModule_ProvideFactory.provide()).build();
+      return SetBuilder.<String>newSetBuilder(8).add(AdminFeatureViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(AdminViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(LoginViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(MainViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(StudentFeatureViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(StudentViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(TeacherFeatureViewModel_HiltModules_KeyModule_ProvideFactory.provide()).add(TeacherViewModel_HiltModules_KeyModule_ProvideFactory.provide()).build();
     }
 
     @Override
@@ -443,6 +445,8 @@ public final class DaggerShikshashilaApp_HiltComponents_SingletonC {
     private final ActivityRetainedCImpl activityRetainedCImpl;
 
     private final ViewModelCImpl viewModelCImpl = this;
+
+    private Provider<AdminFeatureViewModel> adminFeatureViewModelProvider;
 
     private Provider<AdminViewModel> adminViewModelProvider;
 
@@ -471,18 +475,19 @@ public final class DaggerShikshashilaApp_HiltComponents_SingletonC {
     @SuppressWarnings("unchecked")
     private void initialize(final SavedStateHandle savedStateHandleParam,
         final ViewModelLifecycle viewModelLifecycleParam) {
-      this.adminViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 0);
-      this.loginViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 1);
-      this.mainViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 2);
-      this.studentFeatureViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 3);
-      this.studentViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 4);
-      this.teacherFeatureViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 5);
-      this.teacherViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 6);
+      this.adminFeatureViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 0);
+      this.adminViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 1);
+      this.loginViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 2);
+      this.mainViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 3);
+      this.studentFeatureViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 4);
+      this.studentViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 5);
+      this.teacherFeatureViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 6);
+      this.teacherViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 7);
     }
 
     @Override
     public Map<String, Provider<ViewModel>> getHiltViewModelMap() {
-      return MapBuilder.<String, Provider<ViewModel>>newMapBuilder(7).put("com.shikshashila.app.ui.admin.AdminViewModel", ((Provider) adminViewModelProvider)).put("com.shikshashila.app.ui.auth.LoginViewModel", ((Provider) loginViewModelProvider)).put("com.shikshashila.app.ui.auth.MainViewModel", ((Provider) mainViewModelProvider)).put("com.shikshashila.app.ui.student.StudentFeatureViewModel", ((Provider) studentFeatureViewModelProvider)).put("com.shikshashila.app.ui.student.StudentViewModel", ((Provider) studentViewModelProvider)).put("com.shikshashila.app.ui.teacher.TeacherFeatureViewModel", ((Provider) teacherFeatureViewModelProvider)).put("com.shikshashila.app.ui.teacher.TeacherViewModel", ((Provider) teacherViewModelProvider)).build();
+      return MapBuilder.<String, Provider<ViewModel>>newMapBuilder(8).put("com.shikshashila.app.ui.admin.AdminFeatureViewModel", ((Provider) adminFeatureViewModelProvider)).put("com.shikshashila.app.ui.admin.AdminViewModel", ((Provider) adminViewModelProvider)).put("com.shikshashila.app.ui.auth.LoginViewModel", ((Provider) loginViewModelProvider)).put("com.shikshashila.app.ui.auth.MainViewModel", ((Provider) mainViewModelProvider)).put("com.shikshashila.app.ui.student.StudentFeatureViewModel", ((Provider) studentFeatureViewModelProvider)).put("com.shikshashila.app.ui.student.StudentViewModel", ((Provider) studentViewModelProvider)).put("com.shikshashila.app.ui.teacher.TeacherFeatureViewModel", ((Provider) teacherFeatureViewModelProvider)).put("com.shikshashila.app.ui.teacher.TeacherViewModel", ((Provider) teacherViewModelProvider)).build();
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {
@@ -506,25 +511,28 @@ public final class DaggerShikshashilaApp_HiltComponents_SingletonC {
       @Override
       public T get() {
         switch (id) {
-          case 0: // com.shikshashila.app.ui.admin.AdminViewModel 
+          case 0: // com.shikshashila.app.ui.admin.AdminFeatureViewModel 
+          return (T) new AdminFeatureViewModel(singletonCImpl.provideShikshashilaApiProvider.get());
+
+          case 1: // com.shikshashila.app.ui.admin.AdminViewModel 
           return (T) new AdminViewModel(singletonCImpl.adminRepositoryImplProvider.get(), singletonCImpl.authRepositoryImplProvider.get());
 
-          case 1: // com.shikshashila.app.ui.auth.LoginViewModel 
+          case 2: // com.shikshashila.app.ui.auth.LoginViewModel 
           return (T) new LoginViewModel(singletonCImpl.authRepositoryImplProvider.get());
 
-          case 2: // com.shikshashila.app.ui.auth.MainViewModel 
+          case 3: // com.shikshashila.app.ui.auth.MainViewModel 
           return (T) new MainViewModel(singletonCImpl.authRepositoryImplProvider.get());
 
-          case 3: // com.shikshashila.app.ui.student.StudentFeatureViewModel 
+          case 4: // com.shikshashila.app.ui.student.StudentFeatureViewModel 
           return (T) new StudentFeatureViewModel(singletonCImpl.studentRepositoryImplProvider.get());
 
-          case 4: // com.shikshashila.app.ui.student.StudentViewModel 
+          case 5: // com.shikshashila.app.ui.student.StudentViewModel 
           return (T) new StudentViewModel(singletonCImpl.studentRepositoryImplProvider.get(), singletonCImpl.authRepositoryImplProvider.get());
 
-          case 5: // com.shikshashila.app.ui.teacher.TeacherFeatureViewModel 
+          case 6: // com.shikshashila.app.ui.teacher.TeacherFeatureViewModel 
           return (T) new TeacherFeatureViewModel(singletonCImpl.teacherRepositoryImplProvider.get());
 
-          case 6: // com.shikshashila.app.ui.teacher.TeacherViewModel 
+          case 7: // com.shikshashila.app.ui.teacher.TeacherViewModel 
           return (T) new TeacherViewModel(singletonCImpl.teacherRepositoryImplProvider.get(), singletonCImpl.authRepositoryImplProvider.get());
 
           default: throw new AssertionError(id);
@@ -640,14 +648,14 @@ public final class DaggerShikshashilaApp_HiltComponents_SingletonC {
 
     @SuppressWarnings("unchecked")
     private void initialize(final ApplicationContextModule applicationContextModuleParam) {
-      this.provideDataStoreProvider = DoubleCheck.provider(new SwitchingProvider<DataStore<Preferences>>(singletonCImpl, 5));
-      this.provideAuthInterceptorProvider = DoubleCheck.provider(new SwitchingProvider<AuthInterceptor>(singletonCImpl, 4));
-      this.provideOkHttpClientProvider = DoubleCheck.provider(new SwitchingProvider<OkHttpClient>(singletonCImpl, 3));
-      this.provideGsonProvider = DoubleCheck.provider(new SwitchingProvider<Gson>(singletonCImpl, 6));
-      this.provideRetrofitProvider = DoubleCheck.provider(new SwitchingProvider<Retrofit>(singletonCImpl, 2));
-      this.provideShikshashilaApiProvider = DoubleCheck.provider(new SwitchingProvider<ShikshashilaApi>(singletonCImpl, 1));
+      this.provideDataStoreProvider = DoubleCheck.provider(new SwitchingProvider<DataStore<Preferences>>(singletonCImpl, 4));
+      this.provideAuthInterceptorProvider = DoubleCheck.provider(new SwitchingProvider<AuthInterceptor>(singletonCImpl, 3));
+      this.provideOkHttpClientProvider = DoubleCheck.provider(new SwitchingProvider<OkHttpClient>(singletonCImpl, 2));
+      this.provideGsonProvider = DoubleCheck.provider(new SwitchingProvider<Gson>(singletonCImpl, 5));
+      this.provideRetrofitProvider = DoubleCheck.provider(new SwitchingProvider<Retrofit>(singletonCImpl, 1));
+      this.provideShikshashilaApiProvider = DoubleCheck.provider(new SwitchingProvider<ShikshashilaApi>(singletonCImpl, 0));
       this.provideDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<ShikshashilaDatabase>(singletonCImpl, 7));
-      this.adminRepositoryImplProvider = DoubleCheck.provider(new SwitchingProvider<AdminRepositoryImpl>(singletonCImpl, 0));
+      this.adminRepositoryImplProvider = DoubleCheck.provider(new SwitchingProvider<AdminRepositoryImpl>(singletonCImpl, 6));
       this.authRepositoryImplProvider = DoubleCheck.provider(new SwitchingProvider<AuthRepositoryImpl>(singletonCImpl, 8));
       this.studentRepositoryImplProvider = DoubleCheck.provider(new SwitchingProvider<StudentRepositoryImpl>(singletonCImpl, 9));
       this.teacherRepositoryImplProvider = DoubleCheck.provider(new SwitchingProvider<TeacherRepositoryImpl>(singletonCImpl, 10));
@@ -686,26 +694,26 @@ public final class DaggerShikshashilaApp_HiltComponents_SingletonC {
       @Override
       public T get() {
         switch (id) {
-          case 0: // com.shikshashila.app.data.repository.AdminRepositoryImpl 
-          return (T) new AdminRepositoryImpl(singletonCImpl.provideShikshashilaApiProvider.get(), singletonCImpl.cacheDao(), singletonCImpl.provideGsonProvider.get());
-
-          case 1: // com.shikshashila.app.data.api.ShikshashilaApi 
+          case 0: // com.shikshashila.app.data.api.ShikshashilaApi 
           return (T) NetworkModule_ProvideShikshashilaApiFactory.provideShikshashilaApi(singletonCImpl.provideRetrofitProvider.get());
 
-          case 2: // retrofit2.Retrofit 
+          case 1: // retrofit2.Retrofit 
           return (T) NetworkModule_ProvideRetrofitFactory.provideRetrofit(singletonCImpl.provideOkHttpClientProvider.get(), singletonCImpl.provideGsonProvider.get());
 
-          case 3: // okhttp3.OkHttpClient 
+          case 2: // okhttp3.OkHttpClient 
           return (T) NetworkModule_ProvideOkHttpClientFactory.provideOkHttpClient(singletonCImpl.provideAuthInterceptorProvider.get());
 
-          case 4: // com.shikshashila.app.data.api.AuthInterceptor 
+          case 3: // com.shikshashila.app.data.api.AuthInterceptor 
           return (T) NetworkModule_ProvideAuthInterceptorFactory.provideAuthInterceptor(singletonCImpl.provideDataStoreProvider.get());
 
-          case 5: // androidx.datastore.core.DataStore<androidx.datastore.preferences.core.Preferences> 
+          case 4: // androidx.datastore.core.DataStore<androidx.datastore.preferences.core.Preferences> 
           return (T) NetworkModule_ProvideDataStoreFactory.provideDataStore(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
-          case 6: // com.google.gson.Gson 
+          case 5: // com.google.gson.Gson 
           return (T) NetworkModule_ProvideGsonFactory.provideGson();
+
+          case 6: // com.shikshashila.app.data.repository.AdminRepositoryImpl 
+          return (T) new AdminRepositoryImpl(singletonCImpl.provideShikshashilaApiProvider.get(), singletonCImpl.cacheDao(), singletonCImpl.provideGsonProvider.get());
 
           case 7: // com.shikshashila.app.data.local.ShikshashilaDatabase 
           return (T) DatabaseModule_ProvideDatabaseFactory.provideDatabase(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));

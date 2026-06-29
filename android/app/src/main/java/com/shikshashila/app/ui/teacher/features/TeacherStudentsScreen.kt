@@ -278,12 +278,7 @@ fun TeacherStudentsScreen(
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 items(students, key = { it.studentId }) { student ->
-                                    AnimatedVisibility(
-                                        visible = true,
-                                        enter = fadeIn() + slideInVertically()
-                                    ) {
-                                        StudentCard(student = student)
-                                    }
+                                    StudentCard(student = student)
                                 }
                             }
                         }

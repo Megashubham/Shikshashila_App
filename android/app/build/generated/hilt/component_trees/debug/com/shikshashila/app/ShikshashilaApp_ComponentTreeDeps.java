@@ -22,6 +22,8 @@ import hilt_aggregated_deps._com_shikshashila_app_ShikshashilaApp_GeneratedInjec
 import hilt_aggregated_deps._com_shikshashila_app_di_DatabaseModule;
 import hilt_aggregated_deps._com_shikshashila_app_di_NetworkModule;
 import hilt_aggregated_deps._com_shikshashila_app_di_RepositoryModule;
+import hilt_aggregated_deps._com_shikshashila_app_ui_admin_AdminFeatureViewModel_HiltModules_BindsModule;
+import hilt_aggregated_deps._com_shikshashila_app_ui_admin_AdminFeatureViewModel_HiltModules_KeyModule;
 import hilt_aggregated_deps._com_shikshashila_app_ui_admin_AdminViewModel_HiltModules_BindsModule;
 import hilt_aggregated_deps._com_shikshashila_app_ui_admin_AdminViewModel_HiltModules_KeyModule;
 import hilt_aggregated_deps._com_shikshashila_app_ui_auth_LoginViewModel_HiltModules_BindsModule;
@@ -80,6 +82,8 @@ import hilt_aggregated_deps._dagger_hilt_android_internal_modules_HiltWrapper_Ac
         _com_shikshashila_app_di_DatabaseModule.class,
         _com_shikshashila_app_di_NetworkModule.class,
         _com_shikshashila_app_di_RepositoryModule.class,
+        _com_shikshashila_app_ui_admin_AdminFeatureViewModel_HiltModules_BindsModule.class,
+        _com_shikshashila_app_ui_admin_AdminFeatureViewModel_HiltModules_KeyModule.class,
         _com_shikshashila_app_ui_admin_AdminViewModel_HiltModules_BindsModule.class,
         _com_shikshashila_app_ui_admin_AdminViewModel_HiltModules_KeyModule.class,
         _com_shikshashila_app_ui_auth_LoginViewModel_HiltModules_BindsModule.class,

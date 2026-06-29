@@ -53,7 +53,7 @@ interface ShikshashilaApi {
     suspend fun getTeacherStudents(
         @Query("class_id")   classId: String,
         @Query("section_id") sectionId: String
-    ): Response<ApiResponse<com.shikshashila.app.data.model.TeacherStudentsResponse>>
+    ): Response<ApiResponse<com.shikshashila.app.data.model.TeacherStudentsListResponse>>
 
     @GET("teacher/attendance")
     suspend fun getTeacherAttendance(

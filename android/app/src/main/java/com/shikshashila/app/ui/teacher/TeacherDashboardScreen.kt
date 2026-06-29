@@ -45,7 +45,7 @@ private val SoftRed    = Color(0xFFFEE2E2); private val TintRed    = Color(0xFFD
 private val SoftTeal   = Color(0xFFCCFBF1); private val TintTeal   = Color(0xFF0D9488)
 private val SoftOrange = Color(0xFFFFEDD5); private val TintOrange = Color(0xFFEA580C)
 
-private data class TModuleEntry(val title: String, val icon: ImageVector, val bg: Color, val tint: Color, val route: String = "")
+data class TModuleEntry(val title: String, val icon: ImageVector, val bg: Color, val tint: Color, val route: String = "")
 
 @Composable
 fun TeacherDashboardScreen(
@@ -230,7 +230,7 @@ fun TeacherDashboardContent(data: TeacherDashboardData, onNavigateTo: (String) -
                     Column {
                         Text("More Modules", fontFamily = ManropeFontFamily, fontWeight = FontWeight.Bold,
                             fontSize = 16.sp, color = TextDark, modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp))
-                        TModuleGrid(moreModules)
+                        TModuleGrid(moreModules, onNavigateTo)
                         Spacer(Modifier.height(24.dp))
                     }
                 }

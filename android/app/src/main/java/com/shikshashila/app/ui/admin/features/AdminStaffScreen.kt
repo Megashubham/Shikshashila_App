@@ -177,8 +177,6 @@ fun AdminStaffScreen(
                                             labelColor = TextDark
                                         ),
                                         border = FilterChipDefaults.filterChipBorder(
-                                            enabled = true,
-                                            selected = selected,
                                             selectedBorderColor = Color.Transparent,
                                             borderColor = Color(0xFFE5E7EB)
                                         )
