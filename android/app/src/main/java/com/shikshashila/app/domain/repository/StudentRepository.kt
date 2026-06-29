@@ -10,4 +10,7 @@ interface StudentRepository {
     suspend fun getRoutine(): Result<RoutineResponse>
     suspend fun getResults(): Result<ResultsResponse>
     suspend fun getHomework(): Result<HomeworkResponse>
+    suspend fun getAttendance(month: Int? = null, year: Int? = null): Result<com.shikshashila.app.data.model.StudentAttendanceResponse>
+    suspend fun getFees(): Result<com.shikshashila.app.data.model.StudentFeesResponse>
+    suspend fun getNotes(): Result<com.shikshashila.app.data.model.NotesResponse>
 }

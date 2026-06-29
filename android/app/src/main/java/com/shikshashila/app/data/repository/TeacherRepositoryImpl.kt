@@ -120,4 +120,40 @@ class TeacherRepositoryImpl @Inject constructor(
                 ?: Result.failure(Exception("Network error, and no offline data available."))
         }
     }
+
+    override suspend fun getTeacherRoutine(): Result<com.shikshashila.app.data.model.TeacherRoutineResponse> {
+        val cacheKey = "teacher_routine"
+        return try {
+            val response = api.getTeacherRoutine()
+            val body = response.body()
+            if (response.isSuccessful && body != null && body.isSuccess && body.data != null) {
+                cacheDao.insertCache(CacheEntity(cacheKey, gson.toJson(body.data)))
+                Result.success(body.data)
+            } else {
+                fetchFromCache<com.shikshashila.app.data.model.TeacherRoutineResponse>(cacheKey)
+                    ?: Result.failure(Exception(body?.message ?: "Failed to load routine"))
+            }
+        } catch (e: Exception) {
+            fetchFromCache<com.shikshashila.app.data.model.TeacherRoutineResponse>(cacheKey)
+                ?: Result.failure(Exception("Network error, and no offline data available."))
+        }
+    }
+
+    override suspend fun getStudentsList(classId: String, sectionId: String): Result<com.shikshashila.app.data.model.TeacherStudentsListResponse> {
+        val cacheKey = "teacher_students_${classId}_${sectionId}"
+        return try {
+            val response = api.getTeacherStudents(classId, sectionId)
+            val body = response.body()
+            if (response.isSuccessful && body != null && body.isSuccess && body.data != null) {
+                cacheDao.insertCache(CacheEntity(cacheKey, gson.toJson(body.data)))
+                Result.success(body.data)
+            } else {
+                fetchFromCache<com.shikshashila.app.data.model.TeacherStudentsListResponse>(cacheKey)
+                    ?: Result.failure(Exception(body?.message ?: "Failed to load students"))
+            }
+        } catch (e: Exception) {
+            fetchFromCache<com.shikshashila.app.data.model.TeacherStudentsListResponse>(cacheKey)
+                ?: Result.failure(Exception("Network error, and no offline data available."))
+        }
+    }
 }

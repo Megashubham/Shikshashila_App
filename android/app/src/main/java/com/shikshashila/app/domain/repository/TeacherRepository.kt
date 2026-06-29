@@ -12,4 +12,6 @@ interface TeacherRepository {
     suspend fun getAttendance(classId: String, sectionId: String, date: String): Result<TeacherAttendanceResponse>
     suspend fun submitAttendance(request: SubmitAttendanceRequest): Result<String>
     suspend fun getAssignments(classId: String?, sectionId: String?): Result<TeacherAssignmentsResponse>
+    suspend fun getTeacherRoutine(): Result<com.shikshashila.app.data.model.TeacherRoutineResponse>
+    suspend fun getStudentsList(classId: String, sectionId: String): Result<com.shikshashila.app.data.model.TeacherStudentsListResponse>
 }

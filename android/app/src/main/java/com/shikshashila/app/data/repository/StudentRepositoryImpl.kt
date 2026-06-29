@@ -101,4 +101,58 @@ class StudentRepositoryImpl @Inject constructor(
             null
         }
     }
+
+    override suspend fun getAttendance(month: Int?, year: Int?): Result<com.shikshashila.app.data.model.StudentAttendanceResponse> {
+        val cacheKey = "student_attendance_${month}_${year}"
+        return try {
+            val response = api.getStudentAttendance(month, year)
+            val body = response.body()
+            if (response.isSuccessful && body != null && body.isSuccess && body.data != null) {
+                cacheDao.insertCache(CacheEntity(cacheKey, gson.toJson(body.data)))
+                Result.success(body.data)
+            } else {
+                fetchFromCache<com.shikshashila.app.data.model.StudentAttendanceResponse>(cacheKey)
+                    ?: Result.failure(Exception(body?.message ?: "Failed to load attendance"))
+            }
+        } catch (e: Exception) {
+            fetchFromCache<com.shikshashila.app.data.model.StudentAttendanceResponse>(cacheKey)
+                ?: Result.failure(Exception("Network error, and no offline data available."))
+        }
+    }
+
+    override suspend fun getFees(): Result<com.shikshashila.app.data.model.StudentFeesResponse> {
+        val cacheKey = "student_fees"
+        return try {
+            val response = api.getStudentFees()
+            val body = response.body()
+            if (response.isSuccessful && body != null && body.isSuccess && body.data != null) {
+                cacheDao.insertCache(CacheEntity(cacheKey, gson.toJson(body.data)))
+                Result.success(body.data)
+            } else {
+                fetchFromCache<com.shikshashila.app.data.model.StudentFeesResponse>(cacheKey)
+                    ?: Result.failure(Exception(body?.message ?: "Failed to load fees"))
+            }
+        } catch (e: Exception) {
+            fetchFromCache<com.shikshashila.app.data.model.StudentFeesResponse>(cacheKey)
+                ?: Result.failure(Exception("Network error, and no offline data available."))
+        }
+    }
+
+    override suspend fun getNotes(): Result<com.shikshashila.app.data.model.NotesResponse> {
+        val cacheKey = "student_notes"
+        return try {
+            val response = api.getStudentNotes()
+            val body = response.body()
+            if (response.isSuccessful && body != null && body.isSuccess && body.data != null) {
+                cacheDao.insertCache(CacheEntity(cacheKey, gson.toJson(body.data)))
+                Result.success(body.data)
+            } else {
+                fetchFromCache<com.shikshashila.app.data.model.NotesResponse>(cacheKey)
+                    ?: Result.failure(Exception(body?.message ?: "Failed to load notes"))
+            }
+        } catch (e: Exception) {
+            fetchFromCache<com.shikshashila.app.data.model.NotesResponse>(cacheKey)
+                ?: Result.failure(Exception("Network error, and no offline data available."))
+        }
+    }
 }
