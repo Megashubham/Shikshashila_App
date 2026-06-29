@@ -46,3 +46,51 @@ data class Homework(
 data class HomeworkResponse(
     @SerializedName("homework") val homework: List<Homework>
 )
+
+// Student Attendance Detail
+data class AttendanceRecord(
+    @SerializedName("date") val date: String,
+    @SerializedName("present") val present: Boolean
+)
+
+data class AttendanceSummaryDetail(
+    @SerializedName("total") val total: Int,
+    @SerializedName("present") val present: Int,
+    @SerializedName("absent") val absent: Int,
+    @SerializedName("percentage") val percentage: Double
+)
+
+data class StudentAttendanceResponse(
+    @SerializedName("month") val month: Int,
+    @SerializedName("year") val year: Int,
+    @SerializedName("summary") val summary: AttendanceSummaryDetail,
+    @SerializedName("records") val records: List<AttendanceRecord>
+)
+
+// Student Fees
+data class FeePayment(
+    @SerializedName("receipt_no") val receiptNo: String,
+    @SerializedName("amount") val amount: Double,
+    @SerializedName("date") val date: String,
+    @SerializedName("mode") val mode: String,
+    @SerializedName("session") val session: String
+)
+
+data class StudentFeesResponse(
+    @SerializedName("total_paid") val totalPaid: Double,
+    @SerializedName("payments") val payments: List<FeePayment>
+)
+
+// Student Notes
+data class Note(
+    @SerializedName("id") val id: String,
+    @SerializedName("subject") val subject: String,
+    @SerializedName("title") val title: String,
+    @SerializedName("description") val description: String,
+    @SerializedName("created_at") val createdAt: String,
+    @SerializedName("file_url") val fileUrl: String?
+)
+
+data class NotesResponse(
+    @SerializedName("notes") val notes: List<Note>
+)

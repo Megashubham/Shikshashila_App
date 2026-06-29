@@ -45,7 +45,7 @@ private val SoftRed    = Color(0xFFFEE2E2); private val TintRed    = Color(0xFFD
 private val SoftTeal   = Color(0xFFCCFBF1); private val TintTeal   = Color(0xFF0D9488)
 private val SoftOrange = Color(0xFFFFEDD5); private val TintOrange = Color(0xFFEA580C)
 
-private data class TModuleEntry(val title: String, val icon: ImageVector, val bg: Color, val tint: Color)
+private data class TModuleEntry(val title: String, val icon: ImageVector, val bg: Color, val tint: Color, val route: String = "")
 
 @Composable
 fun TeacherDashboardScreen(
@@ -91,21 +91,21 @@ fun TeacherDashboardContent(data: TeacherDashboardData, onNavigateTo: (String) -
     var showMoreModules by remember { mutableStateOf(false) }
 
     val primaryModules = listOf(
-        TModuleEntry("Attendance",   Icons.Filled.EventAvailable,       SoftGreen,  TintGreen),
-        TModuleEntry("Timetable",    Icons.Filled.CalendarMonth,        SoftBlue,   TintBlue),
-        TModuleEntry("Assignments",  Icons.Filled.Assignment,           SoftOrange, TintOrange),
-        TModuleEntry("Students",     Icons.Filled.Group,                SoftPurple, TintPurple),
-        TModuleEntry("Exams",        Icons.Filled.MenuBook,             SoftRed,    TintRed),
-        TModuleEntry("Results",      Icons.Filled.Stars,                SoftYellow, TintYellow),
-        TModuleEntry("Notes",        Icons.Filled.Note,                 SoftPink,   TintPink),
-        TModuleEntry("Reports",      Icons.Filled.Assessment,           SoftTeal,   TintTeal)
+        TModuleEntry("Attendance",   Icons.Filled.EventAvailable,  SoftGreen,  TintGreen,  "teacher_attendance"),
+        TModuleEntry("Timetable",    Icons.Filled.CalendarMonth,   SoftBlue,   TintBlue,   "teacher_routine"),
+        TModuleEntry("Assignments",  Icons.Filled.Assignment,      SoftOrange, TintOrange, "teacher_assignments"),
+        TModuleEntry("Students",     Icons.Filled.Group,           SoftPurple, TintPurple, "teacher_students"),
+        TModuleEntry("Exams",        Icons.Filled.MenuBook,        SoftRed,    TintRed,    ""),
+        TModuleEntry("Results",      Icons.Filled.Stars,           SoftYellow, TintYellow, ""),
+        TModuleEntry("Notes",        Icons.Filled.Note,            SoftPink,   TintPink,   ""),
+        TModuleEntry("Reports",      Icons.Filled.Assessment,      SoftTeal,   TintTeal,   "")
     )
 
     val moreModules = listOf(
-        TModuleEntry("Leave App",    Icons.Filled.EventBusy,            SoftRed,    TintRed),
-        TModuleEntry("Homework",     Icons.Filled.Book,                 SoftOrange, TintOrange),
-        TModuleEntry("Syllabus",     Icons.Filled.ListAlt,              SoftGreen,  TintGreen),
-        TModuleEntry("ID Card",      Icons.Filled.CreditCard,           SoftPink,   TintPink)
+        TModuleEntry("Leave App",    Icons.Filled.EventBusy,       SoftRed,    TintRed,    ""),
+        TModuleEntry("Homework",     Icons.Filled.Book,            SoftOrange, TintOrange, ""),
+        TModuleEntry("Syllabus",     Icons.Filled.ListAlt,         SoftGreen,  TintGreen,  ""),
+        TModuleEntry("ID Card",      Icons.Filled.CreditCard,      SoftPink,   TintPink,   "")
     )
 
     val initials = data.teacherInfo.name.split(" ").take(2).mapNotNull { it.firstOrNull()?.uppercaseChar() }.joinToString("")
@@ -179,7 +179,7 @@ fun TeacherDashboardContent(data: TeacherDashboardData, onNavigateTo: (String) -
             item {
                 Text("Teaching Tools", fontFamily = ManropeFontFamily, fontWeight = FontWeight.Bold,
                     fontSize = 16.sp, color = TextDark, modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp))
-                TModuleGrid(primaryModules)
+                TModuleGrid(primaryModules, onNavigateTo)
                 Spacer(Modifier.height(20.dp))
             }
 
@@ -251,12 +251,13 @@ fun TeacherDashboardContent(data: TeacherDashboardData, onNavigateTo: (String) -
 }
 
 @Composable
-fun TModuleGrid(modules: List<TModuleEntry>) {
+fun TModuleGrid(modules: List<TModuleEntry>, onNavigateTo: (String) -> Unit = {}) {
     val rows = modules.chunked(4)
     Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
         rows.forEach { row ->
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                row.forEach { m -> TModuleIcon(title = m.title, icon = m.icon, bg = m.bg, tint = m.tint) }
+                row.forEach { m -> TModuleIcon(title = m.title, icon = m.icon, bg = m.bg, tint = m.tint,
+                    onClick = { if (m.route.isNotEmpty()) onNavigateTo(m.route) }) }
                 repeat(4 - row.size) { Box(Modifier.width(72.dp)) }
             }
         }

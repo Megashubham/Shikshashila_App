@@ -5,3 +5,4 @@ array com_google_android_gms_fonts_certs_dev
 array com_google_android_gms_fonts_certs_prod
 string app_name
 style Theme.ShikshashilaApp
+xml network_security_config

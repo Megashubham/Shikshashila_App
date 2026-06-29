@@ -55,3 +55,26 @@ data class TeacherAssignment(
 data class TeacherAssignmentsResponse(
     @SerializedName("assignments") val assignments: List<TeacherAssignment>
 )
+
+// Teacher Timetable (Routine)
+data class TRoutineSlot(
+    @SerializedName("start_time") val startTime: String,
+    @SerializedName("end_time") val endTime: String,
+    @SerializedName("subject") val subject: String,
+    @SerializedName("class_name") val className: String
+)
+
+data class TeacherRoutineResponse(
+    @SerializedName("routine") val routine: Map<String, List<TRoutineSlot>>
+)
+
+// Teacher Students List
+data class TeacherStudentItem(
+    @SerializedName("student_id") val studentId: String,
+    @SerializedName("name") val name: String,
+    @SerializedName("registration_no") val registrationNo: String
+)
+
+data class TeacherStudentsListResponse(
+    @SerializedName("students") val students: List<TeacherStudentItem>
+)

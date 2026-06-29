@@ -46,7 +46,7 @@ private val SoftTeal   = Color(0xFFCCFBF1); private val TintTeal   = Color(0xFF0
 private val SoftOrange = Color(0xFFFFEDD5); private val TintOrange = Color(0xFFEA580C)
 
 // ── Data class for a module icon entry ──────────────────────────────────────
-private data class ModuleEntry(val title: String, val icon: ImageVector, val bg: Color, val tint: Color)
+private data class ModuleEntry(val title: String, val icon: ImageVector, val bg: Color, val tint: Color, val route: String = "")
 
 @Composable
 fun AdminDashboardScreen(
@@ -93,33 +93,33 @@ fun AdminDashboardContent(data: AdminDashboardData, onNavigateTo: (String) -> Un
     var showMoreModules by remember { mutableStateOf(false) }
 
     val primaryModules = listOf(
-        ModuleEntry("Students",   Icons.Filled.Group,                SoftPurple, TintPurple),
-        ModuleEntry("Staff Mgmt", Icons.Filled.BadgeOutlined,        SoftPink,   TintPink),
-        ModuleEntry("Attendance", Icons.Filled.EventAvailable,       SoftGreen,  TintGreen),
-        ModuleEntry("Fees / Dues",Icons.Filled.AccountBalanceWallet, SoftYellow, TintYellow),
-        ModuleEntry("Classes",    Icons.Filled.GridView,             SoftBlue,   TintBlue),
-        ModuleEntry("Timetable",  Icons.Filled.CalendarMonth,        SoftTeal,   TintTeal),
-        ModuleEntry("Exams",      Icons.Filled.MenuBook,             SoftRed,    TintRed),
-        ModuleEntry("Reports",    Icons.Filled.Assessment,           SoftBlue,   TintBlue)
+        ModuleEntry("Students",   Icons.Filled.Group,                SoftPurple, TintPurple, "admin_students"),
+        ModuleEntry("Staff Mgmt", Icons.Filled.BadgeOutlined,        SoftPink,   TintPink,   "admin_staff"),
+        ModuleEntry("Attendance", Icons.Filled.EventAvailable,       SoftGreen,  TintGreen,  "admin_attendance"),
+        ModuleEntry("Fees / Dues",Icons.Filled.AccountBalanceWallet, SoftYellow, TintYellow, "admin_fees_report"),
+        ModuleEntry("Classes",    Icons.Filled.GridView,             SoftBlue,   TintBlue,   "admin_classes"),
+        ModuleEntry("Timetable",  Icons.Filled.CalendarMonth,        SoftTeal,   TintTeal,   ""),
+        ModuleEntry("Exams",      Icons.Filled.MenuBook,             SoftRed,    TintRed,    ""),
+        ModuleEntry("Reports",    Icons.Filled.Assessment,           SoftBlue,   TintBlue,   "")
     )
 
     val commsModules = listOf(
-        ModuleEntry("Circulars",  Icons.Filled.Notifications,        SoftYellow, TintYellow),
-        ModuleEntry("Events",     Icons.Filled.Event,                SoftOrange, TintOrange),
-        ModuleEntry("SMS / Alert",Icons.Filled.Sms,                  SoftPink,   TintPink),
-        ModuleEntry("Settings",   Icons.Filled.Settings,             SoftBlue,   TintBlue)
+        ModuleEntry("Circulars",  Icons.Filled.Notifications,        SoftYellow, TintYellow, ""),
+        ModuleEntry("Events",     Icons.Filled.Event,                SoftOrange, TintOrange, ""),
+        ModuleEntry("SMS / Alert",Icons.Filled.Sms,                  SoftPink,   TintPink,   ""),
+        ModuleEntry("Settings",   Icons.Filled.Settings,             SoftBlue,   TintBlue,   "")
     )
 
     val moreModules = listOf(
-        ModuleEntry("Expenses",   Icons.Filled.AccountBalance,       SoftGreen,  TintGreen),
-        ModuleEntry("Library",    Icons.Filled.LibraryBooks,         SoftPurple, TintPurple),
-        ModuleEntry("Transport",  Icons.Filled.DirectionsBus,        SoftTeal,   TintTeal),
-        ModuleEntry("Leads",      Icons.Filled.PersonAdd,            SoftBlue,   TintBlue),
-        ModuleEntry("ID Card",    Icons.Filled.CreditCard,           SoftPink,   TintPink),
-        ModuleEntry("Leave App",  Icons.Filled.EventBusy,            SoftRed,    TintRed),
-        ModuleEntry("Homework",   Icons.Filled.Book,                 SoftOrange, TintOrange),
-        ModuleEntry("eLibrary",   Icons.Filled.MenuBook,             SoftYellow, TintYellow),
-        ModuleEntry("Syllabus",   Icons.Filled.ListAlt,              SoftGreen,  TintGreen)
+        ModuleEntry("Expenses",   Icons.Filled.AccountBalance,       SoftGreen,  TintGreen,  ""),
+        ModuleEntry("Library",    Icons.Filled.LibraryBooks,         SoftPurple, TintPurple, ""),
+        ModuleEntry("Transport",  Icons.Filled.DirectionsBus,        SoftTeal,   TintTeal,   ""),
+        ModuleEntry("Leads",      Icons.Filled.PersonAdd,            SoftBlue,   TintBlue,   ""),
+        ModuleEntry("ID Card",    Icons.Filled.CreditCard,           SoftPink,   TintPink,   ""),
+        ModuleEntry("Leave App",  Icons.Filled.EventBusy,            SoftRed,    TintRed,    ""),
+        ModuleEntry("Homework",   Icons.Filled.Book,                 SoftOrange, TintOrange, ""),
+        ModuleEntry("eLibrary",   Icons.Filled.MenuBook,             SoftYellow, TintYellow, ""),
+        ModuleEntry("Syllabus",   Icons.Filled.ListAlt,              SoftGreen,  TintGreen,  "")
     )
 
     LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 40.dp)) {
@@ -226,7 +226,7 @@ fun AdminDashboardContent(data: AdminDashboardData, onNavigateTo: (String) -> Un
             item {
                 Text("Academics & Operations", fontFamily = ManropeFontFamily, fontWeight = FontWeight.Bold,
                     fontSize = 16.sp, color = TextDark, modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp))
-                ModuleGrid(primaryModules)
+                ModuleGrid(primaryModules, onNavigateTo)
                 Spacer(Modifier.height(20.dp))
             }
 
@@ -234,7 +234,7 @@ fun AdminDashboardContent(data: AdminDashboardData, onNavigateTo: (String) -> Un
             item {
                 Text("Communication & Tools", fontFamily = ManropeFontFamily, fontWeight = FontWeight.Bold,
                     fontSize = 16.sp, color = TextDark, modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp))
-                ModuleGrid(commsModules)
+                ModuleGrid(commsModules, onNavigateTo)
                 Spacer(Modifier.height(20.dp))
             }
 
@@ -302,13 +302,14 @@ fun AdminDashboardContent(data: AdminDashboardData, onNavigateTo: (String) -> Un
 
 // ── Reusable grid layout: 4 columns ────────────────────────────────────────
 @Composable
-fun ModuleGrid(modules: List<ModuleEntry>) {
+fun ModuleGrid(modules: List<ModuleEntry>, onNavigateTo: (String) -> Unit = {}) {
     val rows = modules.chunked(4)
     Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
         rows.forEach { row ->
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 row.forEach { module ->
-                    AdminModuleIcon(title = module.title, icon = module.icon, bg = module.bg, tint = module.tint)
+                    AdminModuleIcon(title = module.title, icon = module.icon, bg = module.bg, tint = module.tint,
+                        onClick = { if (module.route.isNotEmpty()) onNavigateTo(module.route) })
                 }
                 // Pad empty cells if row has fewer than 4
                 repeat(4 - row.size) { Box(Modifier.width(72.dp)) }
